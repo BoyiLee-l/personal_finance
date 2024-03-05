@@ -1,3 +1,2 @@
 # personal_finance
-python_project
-個人理財文章
+個人理財網站
