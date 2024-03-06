@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>個人理財頁面</title>
-  </head>
-  <body>
-    <h1>個人理財頁面</h1>
-  </body>
-</html>
+{% extends "base.html" %} {% block content %}
+<div id ="cash-info">
+  <h2>現金庫存</h2>
+  <table class="table table-bordered">
+    <tr>
+      <td>台幣總額： 元</td>
+      <td>美金總額： 元</td>
+      <td>今日匯率:</td>
+      <td>現金總額： 元</td>
+    </tr>
+  </table>
+</div>
+{% endblock %}
