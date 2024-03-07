@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block content %}
-<div id ="cash-info">
+<div id="cash-info">
   <h2>現金庫存</h2>
   <table class="table table-bordered">
     <tr>
@@ -59,7 +59,20 @@
         <th scope="col">報酬率(%)</th>
       </tr>
     </thead>
+    <tbody>
+      {% for data in data["stock_info"] %}
+      <tr>
+        <td>{{data["stock_id"]}}</td>
+        <td>{{data["shares"]}}</td>
+        <td>{{data["current_price"]}}</td>
+        <td>{{data["total_value"]}}</td>
+        <td>{{data["value_percentage"]}}</td>
+        <td>{{data["stock_cost"]}}</td>
+        <td>{{data["average_cost"]}}</td>
+        <td>{{data["rate_of_return"]}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
-
 </div>
 {% endblock %}
