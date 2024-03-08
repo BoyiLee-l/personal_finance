@@ -75,4 +75,18 @@
     </tbody>
   </table>
 </div>
+
+<div id="chart" style="display: flex; flex-wrap: wrap;">
+  {% if data["show_pic_1"] %}
+  <figure style="flex: 0 1 500px; margin: 10px;">
+    <figcaption>股票庫存佔比圖</figcaption>
+    <img style="width: 100%" src="static/piechart.jpg" alt="股票庫存佔比圖">
+  </figure>
+  {% endif %} {% if data["show_pic_2"] %}
+  <figure style="flex: 0 1 500px; margin: 10px;">
+    <figcaption>資產比例佔比圖</figcaption>
+    <img style="width: 100%" src="static/piechart2.jpg" alt="資產比例佔比圖">
+  </figure>
+  {% endif %} 
+</div>
 {% endblock %}

@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, g, redirect
 import sqlite3
 import requests
 import math
+import os
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("agg")
 
 app = Flask(__name__)
 database = "datafile.db"
@@ -56,6 +60,8 @@ def home():
         result = result.fetchall()
         stock_cost = 0  # 單一股票總花費
         shares = 0  # 單一股票總數
+
+        # 計算單一股數花費以及股票總數
         for d in result:
             shares += d[2]
             stock_cost += d[2] * d[3] + d[4] + d[5]
@@ -75,14 +81,48 @@ def home():
         rate_of_return = round((total_value - stock_cost)
                                * 100 / stock_cost, 2)
 
-        stock_info.append({"stock_id": stock, "stock_cost": stock_cost, "total_value": total_value, "average_cost": average_cost,
-                           "shares": shares, "current_price": current_price, "rate_of_return": rate_of_return})
-        for stock in stock_info:
-            stock["value_percentage"] = round(
-                stock["total_value"] * 100 / total_stock_value, 2)
+        stock_info.append({"stock_id": stock, "stock_cost": stock_cost,
+                            "total_value": total_value, "average_cost": average_cost,
+                              "shares": shares, "current_price": current_price,
+                                "rate_of_return": rate_of_return})
+        
+    for stock in stock_info:
+        stock["value_percentage"] = round(
+            stock["total_value"] * 100 / total_stock_value, 2)
+    
+    #繪製股票圓餅圖
+    if len(unique_stock_list) != 0:
+        labels = tuple(unique_stock_list)
+        sizes = [d["total_value"] for d in stock_info]
+        fig, ax = plt.subplots(figsize=(6, 5))
+        ax.pie(sizes, labels=labels, autopct=None, shadow=None)
+        fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.savefig("static/piechart.jpg", dpi=200)
+    else:
+        try:
+            os.remove("static/piechart.jpg")
+        except:
+            pass
+    
+    #繪製股票現金圓餅圖
+    if us_dollars != 0 or taiwanese_dollars != 0 or total_stock_value != 0:
+        labels = ("USD", "TWD", "Stock")
+        sizes = (us_dollars * currency["USDTWD"]["Exrate"], taiwanese_dollars, total_stock_value)
+        fig, ax = plt.subplots(figsize=(6, 5))
+        ax.pie(sizes, labels=labels, autopct=None, shadow=None)
+        fig.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.savefig("static/piechart2.jpg", dpi=200)
+    else:
+        try:
+            os.remove("static/piechart2.jpg")
+        except:
+            pass
+    
 
-    data = {"total": total, "currency": currency["USDTWD"]["Exrate"],
-            "ud": us_dollars, "td": taiwanese_dollars, "cash_result": cash_result, "stock_info": stock_info}
+    data = {"show_pic_1": os.path.exists("static/piechart.jpg"), "show_pic_2": os.path.exists("static/piechart2.jpg")
+            , "total": total, "currency": currency["USDTWD"]["Exrate"]
+            ,"ud": us_dollars, "td": taiwanese_dollars, "cash_result": cash_result
+            , "stock_info": stock_info}
 
     return render_template("index.html", data=data)
 
